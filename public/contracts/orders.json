@@ -1,0 +1,13 @@
+{
+  "name": "Orders quality contract",
+  "version": 1,
+  "allow_extra_columns": false,
+  "columns": {
+    "order_id": {"type": "string", "required": true, "nullable": false, "unique": true},
+    "customer_id": {"type": "string", "required": true, "nullable": false},
+    "amount": {"type": "number", "required": true, "nullable": false, "minimum": "0", "maximum": "5000"},
+    "status": {"type": "string", "required": true, "nullable": false, "allowed_values": ["pending", "paid", "shipped", "cancelled"]},
+    "ordered_at": {"type": "date", "required": true, "nullable": false},
+    "is_priority": {"type": "boolean", "required": true, "nullable": false}
+  }
+}

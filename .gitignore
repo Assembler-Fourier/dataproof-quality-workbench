@@ -1,0 +1,11 @@
+.venv/
+.vercel/
+__pycache__/
+*.pyc
+*.egg-info/
+.env*
+dist/
+node_modules/
+.DS_Store
+coverage.xml
+.coverage

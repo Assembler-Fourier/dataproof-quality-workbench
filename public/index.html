@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Profile CSV datasets, define reusable data contracts, and trace every failed rule. An open-source data quality workbench by Uzair Waseem.">
+  <meta name="theme-color" content="#172c4b">
+  <title>DataProof — Data quality workbench</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to workspace</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="DataProof home"><span class="brand-mark" aria-hidden="true">D<span>✓</span></span>DataProof<span class="version">1.0</span></a>
+    <nav aria-label="Project links"><a href="/openapi.json" target="_blank" rel="noopener">API schema ↗</a><a href="https://github.com/Assembler-Fourier/dataproof-quality-workbench" target="_blank" rel="noopener">Source code ↗</a></nav>
+  </header>
+  <main id="workspace">
+    <div class="page-heading"><div><p class="eyebrow">DATA RELIABILITY / WORKSPACE</p><h1>Data quality workbench</h1><p class="intro">Define what good data looks like. Find exactly where it breaks.</p></div><span class="privacy-tag"><span aria-hidden="true">◈</span> No saved uploads</span></div>
+    <div id="notice" class="notice" role="status" aria-live="polite">Loading the sample dataset…</div>
+    <div class="workspace-grid">
+      <section class="panel dataset-panel" aria-labelledby="dataset-heading">
+        <div class="panel-header"><h2 id="dataset-heading"><span class="step">01</span> Dataset</h2><span class="eyebrow" id="file-kind">CSV / UTF-8</span></div>
+        <div class="upload-zone" id="drop-zone"><div class="file-icon" aria-hidden="true">CSV</div><div class="file-detail"><strong id="filename">No dataset loaded</strong><span id="file-detail">Up to 2 MiB · 10,000 rows · 50 columns</span></div><label class="button secondary upload-label">Choose CSV<input id="file-input" type="file" accept=".csv,text/csv" aria-label="Choose CSV file"></label></div>
+        <div class="dataset-actions"><button type="button" class="text-button" id="sample-button">↻ Load example orders</button><span>or drop a file above</span></div>
+        <div class="metrics profile-metrics"><div><span class="metric-label">RECORDS</span><strong id="row-count">—</strong></div><div><span class="metric-label">COLUMNS</span><strong id="column-count">—</strong></div><div><span class="metric-label">EMPTY CELLS</span><strong id="null-count">—</strong></div></div>
+        <div class="section-label"><h3>Column profile</h3><span>Click a column to edit its rules</span></div>
+        <div class="table-wrap profile-wrap"><table><caption class="sr-only">Column types and completeness. Select a column to edit its contract.</caption><thead><tr><th>Column</th><th>Detected type</th><th>Empty</th><th>Distinct</th></tr></thead><tbody id="profile-body"></tbody></table></div>
+        <details class="data-preview"><summary>Preview the first 8 records · cells capped at 300 characters</summary><div class="table-wrap"><table><caption class="sr-only">Dataset preview</caption><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div></details>
+      </section>
+      <section class="panel contract-panel" aria-labelledby="contract-heading">
+        <div class="panel-header"><h2 id="contract-heading"><span class="step">02</span> Data contract</h2><span class="small-tag" id="rule-count">0 columns</span></div>
+        <div class="contract-content">
+          <label for="contract-name">Contract name</label><input id="contract-name" type="text" maxlength="120" value="Orders quality contract">
+          <div class="contract-toolbar"><label class="text-button import-label">Import JSON<input id="contract-input" type="file" accept=".json,application/json" aria-label="Import contract JSON"></label><button class="text-button" id="export-contract" type="button">Export JSON ↓</button></div>
+          <label class="checkbox-line"><input id="extra-columns" type="checkbox" checked>Allow columns outside the contract</label>
+          <div class="editor-divider"></div>
+          <div class="column-picker"><label for="column-select">Rules for column</label><select id="column-select"></select></div>
+          <form id="rule-form">
+            <div class="field-row"><div><label for="column-type">Expected type</label><select id="column-type"><option value="string">String</option><option value="integer">Integer</option><option value="number">Number</option><option value="date">Date (YYYY-MM-DD)</option><option value="boolean">Boolean (true / false)</option></select></div><div class="column-range"><span class="metric-label">OBSERVED RANGE</span><span id="observed-range">—</span></div></div>
+            <div class="rule-checks"><label class="checkbox-line"><input type="checkbox" id="required-column">Column must exist</label><label class="checkbox-line"><input type="checkbox" id="non-null">No empty values</label><label class="checkbox-line"><input type="checkbox" id="unique">Values must be unique</label></div>
+            <div class="field-row" id="bounds-fields"><div><label for="minimum">Minimum</label><input type="number" id="minimum" step="any" placeholder="No minimum"></div><div><label for="maximum">Maximum</label><input type="number" id="maximum" step="any" placeholder="No maximum"></div></div>
+            <label for="allowed-values">Allowed values <span class="optional">optional</span></label><textarea id="allowed-values" rows="2" placeholder="One value per line"></textarea><p class="field-hint">Exact, case-sensitive values. Leave blank to allow any value.</p>
+          </form>
+          <button class="button primary run-button" id="run-button" type="button">Run validation <span aria-hidden="true">→</span></button>
+          <p class="contract-footnote">Reusable in the browser, API, or command line.</p>
+        </div>
+      </section>
+    </div>
+    <section class="panel results-panel" aria-labelledby="results-heading">
+      <div class="panel-header result-header"><h2 id="results-heading"><span class="step">03</span> Validation report <span id="result-status" class="status-pill neutral">Ready</span></h2><div class="report-actions"><button class="button secondary compact" id="export-report" type="button" disabled>Report JSON ↓</button><button class="button secondary compact" id="export-rejected" type="button" disabled>Rejected CSV ↓</button></div></div>
+      <div id="report-empty" class="empty-state">Run validation to inspect records against your contract.</div>
+      <div id="report-content" hidden>
+        <div class="result-overview"><div class="quality-summary"><span class="metric-label">RECORDS PASSING</span><div class="quality-number"><strong id="quality-percent">—</strong><span id="quality-fraction"></span></div><progress id="quality-progress" max="100" value="0" aria-label="Percentage of records passing validation"></progress></div><div class="result-stat"><span class="metric-label">VALID RECORDS</span><strong id="valid-rows">—</strong></div><div class="result-stat"><span class="metric-label">REJECTED RECORDS</span><strong id="rejected-rows">—</strong></div><div class="result-stat"><span class="metric-label">RULE VIOLATIONS</span><strong id="violation-count">—</strong></div></div>
+        <div class="findings-toolbar"><div><h3>Findings</h3><p id="findings-caption"></p></div><div class="filter-control"><label for="rule-filter">Filter by rule</label><select id="rule-filter"><option value="all">All rules</option></select></div></div>
+        <div id="rule-summary" class="rule-summary" aria-label="Violation counts by rule"></div>
+        <div class="table-wrap findings-wrap"><table><caption class="sr-only">Validation violations with record number, column, failed rule, original value and explanation</caption><thead><tr><th>Record</th><th>Column</th><th>Rule</th><th>Value</th><th>Details</th></tr></thead><tbody id="findings-body"></tbody></table></div>
+        <p class="report-note">Record numbers include the header as record 1. Quoted multiline cells count as one record. For duplicate values, the first occurrence is retained.</p>
+      </div>
+    </section>
+    <footer><p>Built by <a href="https://github.com/Assembler-Fourier" target="_blank" rel="noopener">Uzair Waseem</a><span>·</span>Open source under MIT</p><p>Files are processed on the server for each request and are not saved by this app. Refreshing clears this workspace.</p></footer>
+  </main>
+</body>
+</html>

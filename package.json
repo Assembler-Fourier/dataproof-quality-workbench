@@ -1,0 +1,11 @@
+{
+  "name": "dataproof-quality-workbench",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zero-dependency frontend build for the DataProof workbench",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node --check public/assets/app.js && node --check scripts/build.mjs"
+  },
+  "engines": {"node": ">=24"}
+}
